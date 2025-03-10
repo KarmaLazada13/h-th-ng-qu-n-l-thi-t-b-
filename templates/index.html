@@ -3,44 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý thiết bị</title>
+    <title>Quản lý hóa đơn điện</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <div class="container mt-4">
-        <h2>Danh sách thiết bị</h2>
-        <a href="{{ url_for('search') }}" class="btn btn-info mb-3">Tìm kiếm thiết bị</a>
-        <a href="{{ url_for('add') }}" class="btn btn-primary mb-3">Thêm thiết bị</a>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên thiết bị</th>
-                    <th>Loại</th>
-                    <th>Hãng</th>
-                    <th>Vị trí</th>
-                    <th>Tình trạng</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for device in devices %}
-                <tr>
-                    <td>{{ device[0] }}</td>
-                    <td>{{ device[1] }}</td>
-                    <td>{{ device[2] }}</td>
-                    <td>{{ device[3] }}</td>
-                    <td>{{ device[4] }}</td>
-                    <td>{{ device[5] }}</td>
-                    <td>
-                        <a href="{{ url_for('edit', device_id=device[0]) }}" class="btn btn-warning btn-sm">Sửa</a>
-                        <a href="{{ url_for('delete', device_id=device[0]) }}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<body class="container mt-4">
+
+    <h2 class="mb-3">Danh sách hóa đơn điện</h2>
+
+    <!-- Thanh tìm kiếm -->
+    <form class="mb-3 d-flex" method="GET">
+        <input type="text" class="form-control w-25 me-2" name="search" placeholder="Nhập tên khách hàng..." value="{{ search_query }}">
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    </form>
+
+    <!-- Nút thêm hóa đơn -->
+    <a href="{{ url_for('add_bill') }}" class="btn btn-success mb-3">➕ Thêm hóa đơn</a>
+
+    <!-- Bảng hiển thị dữ liệu -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Tên khách hàng</th>
+                <th>Số điện tiêu thụ</th>
+                <th>Tháng</th>
+                <th>Số tiền</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>{{ bill.id }}</td>
+                <td>{{ bill.customer_name }}</td>
+                <td>{{ bill.electric_usage }} kWh</td>
+                <td>{{ bill.month }}</td>
+                <td>{{ bill.amount }} VNĐ</td>
+                <td>{{ bill.status }}</td>
+                <td>
+                    <a href="{{ url_for('edit_bill', bill_id=bill.id) }}" class="btn btn-warning btn-sm">✏️ Sửa</a>
+                    <a href="{{ url_for('delete_bill', bill_id=bill.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">🗑️ Xóa</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </body>
 </html>
-

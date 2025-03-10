@@ -1,21 +1,25 @@
 import sqlite3
+DATABASE = "database.db"
+# Kết nối đến database (nếu chưa có sẽ tự tạo)
+conn = sqlite3.connect("database.db")
+cursor = conn.cursor()
+def get_db_connection():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row  # Trả về dữ liệu dưới dạng dictionary
+    return conn
+# Tạo bảng nếu chưa tồn tại
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS electric_bills (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        customer_name TEXT NOT NULL,
+        month TEXT NOT NULL,
+        consumption REAL NOT NULL,
+        total_amount REAL NOT NULL
+    )
+''')
 
-def init_db():
-    conn = sqlite3.connect("devices.db")
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS devices (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            device_name TEXT NOT NULL,
-            device_type TEXT NOT NULL,
-            brand TEXT NOT NULL,
-            location TEXT NOT NULL,
-            status TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+# Lưu thay đổi và đóng kết nối
+conn.commit()
+conn.close()
 
-if __name__ == "__main__":
-    init_db()
-    print("Database initialized successfully!")
+print("Database and table created successfully!")
